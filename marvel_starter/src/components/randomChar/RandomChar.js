@@ -9,11 +9,11 @@ import ErrorMessage from '../errorMessage/ErrorMessagge';
 
 class RandomChar extends Component {
 
-    constructor(props) {     //констурктор чтобы запускать метод(напрмер при кликах на кнопки)
-        super(props);
-        this.updateChar();
+    // constructor(props) {     //констурктор чтобы запускать метод(напрмер при кликах на кнопки)
+    //     super(props);
+    //     this.updateChar();
 
-    }
+    // }
     state = {
         char: {}, //в стейт записываеться нужный обьект  с нашщей конструкцией
         loading : true,
@@ -22,10 +22,20 @@ class RandomChar extends Component {
 
     marvelService = new MarvelService(); //записываем в метод функцию получения данных с базы
 
+    componentDidMount(){
+        this.updateChar();
+    }
+
+    componentWillUnmount() {
+    }
     onCharLoaded = (char) => {
         this.setState({char,loading:false}) //конструкция для записывания персонажа в стейт
     }
-
+    oncharLoading = () => {
+        this.setState({
+            loading: true
+        })
+    }
     onError = () => {
         this.setState({
             loading: false,
@@ -35,6 +45,7 @@ class RandomChar extends Component {
 
     updateChar = () =>{  //получем случайного персонажа из базы данных
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
+        this.oncharLoading();
         this.marvelService
             .getCharacter(id)
             .then(this.onCharLoaded
@@ -62,7 +73,7 @@ class RandomChar extends Component {
                         Or choose another one
                     </p>
                     <button className="button button__main">
-                        <div className="inner">try it</div>
+                        <div onClick={this.updateChar} className="inner">try it</div>
                     </button>
                     <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
                 </div>
@@ -72,10 +83,16 @@ class RandomChar extends Component {
     }
 
     const View = ({char}) => {
-        const {name, description,thumbnail,homepage,wiki} = char;
+        const {name, description, thumbnail, homepage, wiki} = char;
+        let imgStyle = {'objectFit' : 'cover'};
+        if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+            imgStyle = {'objectFit' : 'contain'};
+        }
+
         return(
             <div className="randomchar__block">
-                    <img src={thumbnail} alt="Random character" className="randomchar__img"/>
+                    <img src={thumbnail} alt="Random character" className="randomchar__img" style={imgStyle}/>
+                    
                     <div className="randomchar__info">
                         <p className="randomchar__name">{name}</p>
                         <p className="randomchar__descr">
