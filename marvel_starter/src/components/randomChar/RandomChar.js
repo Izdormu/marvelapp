@@ -4,7 +4,7 @@ import './randomChar.scss';
 //import thor from '../../resources/img/thor.jpeg';
 import mjolnir from '../../resources/img/mjolnir.png';
 import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessagge';
+import ErrorMessage from '../errorMessage/ErrorMessage';
 
 
 class RandomChar extends Component {
@@ -31,7 +31,7 @@ class RandomChar extends Component {
     onCharLoaded = (char) => {
         this.setState({char,loading:false}) //конструкция для записывания персонажа в стейт
     }
-    oncharLoading = () => {
+    onCharLoading = () => {
         this.setState({
             loading: true
         })
@@ -45,7 +45,7 @@ class RandomChar extends Component {
 
     updateChar = () =>{  //получем случайного персонажа из базы данных
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-        this.oncharLoading();
+        this.onCharLoading();
         this.marvelService
             .getCharacter(id)
             .then(this.onCharLoaded
