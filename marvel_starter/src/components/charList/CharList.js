@@ -2,54 +2,44 @@
 import {useState,useEffect,useRef} from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
-import MarvelService from '../../services/MarvelService';
 import './charList.scss';
+import useMarvelService from '../../services/MarvelService';
 
 const CharList = (props) => {
 
     const [charList,setCharList] = useState([]);
-    const [loading,setLoading] = useState(true);
-    const [error,setError] = useState(false);
     const [newItemLoading,setNewItemLoading] = useState(false);
     const [offset,setOffset] = useState(0);
     const [charEnded,setCharEnded] = useState(false);
     const [activeItem,setActiveItem] = useState(null);
     
-    const marvelService = new MarvelService();
+    const {loading,error,getAllCharacters} = useMarvelService();
 
     useEffect(() => {
-        onRequest();
+        onRequest(offset,true);
     },[])
     // componentDidMount() {
     //     this.onRequest();
     // }
 
-    const onRequest = (offset) => {
-        onCharListLoading();
-        marvelService.getAllCharacters(offset)
+    const onRequest = (offset,initial) => {
+        initial ? setNewItemLoading(false) : setNewItemLoading(true);
+        
+        getAllCharacters(offset)
             .then(onCharListLoaded)
-            .catch(onError)
+            
     }
 
-    const onCharListLoading = () => {
-        setNewItemLoading(true);
-    }
+    
 
     const onCharListLoaded = (newCharList) => {
-        let ended = marvelService._totalCharacters -offset <= 9;
-
-
-
-        // this.setState(({charList,offset}) => ({
-        //     charList: [...charList,...newCharList ],
-        //     loading: false,
-        //     newItemLoading: false,
-        //     offset: offset + 9,
-        //     charEnded: ended
-        // }))
+        let ended = false;
+        if (newCharList.length < 9) {
+            ended = true
+        }
 
         setCharList(charList => [...charList,...newCharList ]);
-        setLoading(false);
+      
         setNewItemLoading(false);
         setOffset(offset => offset + 9);
         setCharEnded(ended);
@@ -57,15 +47,6 @@ const CharList = (props) => {
 
     }
 
-   const onError = () => {
-       setError(true);
-       setLoading(false);
-
-    
-    
-    
-    
-    }
    const handleClick = id => {
        setActiveItem(activeItem => id)
         console.log("click")
@@ -78,9 +59,9 @@ const CharList = (props) => {
    function renderItems(arr) {
         
         
-        const items =  arr.map((item) => {
+        const items =  arr.map((item,i) => {
             let imgStyle = {'objectFit' : 'cover'};
-            if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpgb') {
+            if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
                 imgStyle = {'objectFit' : 'unset'};
             }
             // const {activeItem} = this.state.activeItem
@@ -121,14 +102,13 @@ const CharList = (props) => {
         const items = renderItems(charList,activeItem);
 
         const errorMessage = error ? <ErrorMessage/> : null;
-        const spinner = loading ? <Spinner/> : null;
-        const content = !(loading || error) ? items : null;
-
+        const spinner = loading && !newItemLoading ? <Spinner/> : null;
+        
         return (
             <div className="char__list">
                 {errorMessage}
                 {spinner}
-                {content}
+                {items}
                 <button className="button button__main button__long"
                 disabled = {newItemLoading}
                 style = {{"display" : charEnded ? 'none' : 'block'}}
