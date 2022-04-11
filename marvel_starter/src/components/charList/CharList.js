@@ -4,6 +4,7 @@ import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import './charList.scss';
 import useMarvelService from '../../services/MarvelService';
+import { Transition,CSSTransition,TransitionGroup} from 'react-transition-group';
 
 const CharList = (props) => {
 
@@ -71,6 +72,7 @@ const CharList = (props) => {
             console.log(activeItem)
             
             return (
+                <CSSTransition in={item.id} timeout={500} classNames="char__item">
                 <li 
                     tabIndex= {0}
                     key={item.id}
@@ -80,6 +82,7 @@ const CharList = (props) => {
                         <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
                         <div className="char__name">{item.name}</div>
                 </li>
+                </CSSTransition>
                  
             )
             
@@ -88,7 +91,9 @@ const CharList = (props) => {
         // А эта конструкция вынесена для центровки спиннера/ошибки
         return (
             <ul className="char__grid">
+                 <TransitionGroup component={null}>
                 {items}
+                </TransitionGroup>
             </ul>
         )
 
