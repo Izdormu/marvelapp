@@ -1,63 +1,64 @@
-import {Component} from 'react';
-import MarvelService from '../../services/MarvelService';
-import './randomChar.scss';
-//import thor from '../../resources/img/thor.jpeg';
-import mjolnir from '../../resources/img/mjolnir.png';
+import { Component } from 'react';
 import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessagge';
+import ErrorMessage from '../errorMessage/ErrorMessage';
+import MarvelService from '../../services/MarvelService';
 
+import './randomChar.scss';
+import mjolnir from '../../resources/img/mjolnir.png';
 
 class RandomChar extends Component {
-
-    // constructor(props) {     //констурктор чтобы запускать метод(напрмер при кликах на кнопки)
-    //     super(props);
-    //     this.updateChar();
-
-    // }
     state = {
-        char: {}, //в стейт записываеться нужный обьект  с нашщей конструкцией
-        loading : true,
-        error : false,
+        char: {},
+        loading: true,
+        error: false
     }
 
-    marvelService = new MarvelService(); //записываем в метод функцию получения данных с базы
+    marvelService = new MarvelService();
 
-    componentDidMount(){
+    componentDidMount() {
         this.updateChar();
+        // this.timerId = setInterval(this.updateChar, 15000);
     }
 
     componentWillUnmount() {
+        clearInterval(this.timerId);
     }
+
     onCharLoaded = (char) => {
-        this.setState({char,loading:false}) //конструкция для записывания персонажа в стейт
+        this.setState({
+            char, 
+            loading: false
+        })
     }
-    oncharLoading = () => {
+
+    onCharLoading = () => {
         this.setState({
             loading: true
         })
     }
+
     onError = () => {
         this.setState({
             loading: false,
-            error :true
+            error: true
         })
     }
 
-    updateChar = () =>{  //получем случайного персонажа из базы данных
+    updateChar = () => {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-        this.oncharLoading();
+        this.onCharLoading();
         this.marvelService
             .getCharacter(id)
-            .then(this.onCharLoaded
-            ) 
-            .catch(this.onError)
+            .then(this.onCharLoaded)
+            .catch(this.onError);
     }
-    
+
     render() {
-        const {char,loading,error} = this.state;//вытаскиваем данные
+
+        const {char, loading, error} = this.state;
         const errorMessage = error ? <ErrorMessage/> : null;
         const spinner = loading ? <Spinner/> : null;
-        const content = !(loading || error) ? <View char={char}/> : null
+        const content = !(loading || error) ? <View char={char}/> : null;
 
         return (
             <div className="randomchar">
@@ -72,43 +73,42 @@ class RandomChar extends Component {
                     <p className="randomchar__title">
                         Or choose another one
                     </p>
-                    <button className="button button__main">
-                        <div onClick={this.updateChar} className="inner">try it</div>
+                    <button onClick={this.updateChar} className="button button__main">
+                        <div className="inner">try it</div>
                     </button>
                     <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
                 </div>
             </div>
         )
     }
+}
+
+const View = ({char}) => {
+    const {name, description, thumbnail, homepage, wiki} = char;
+    let imgStyle = {'objectFit' : 'cover'};
+    if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+        imgStyle = {'objectFit' : 'contain'};
     }
 
-    const View = ({char}) => {
-        const {name, description, thumbnail, homepage, wiki} = char;
-        let imgStyle = {'objectFit' : 'cover'};
-        if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
-            imgStyle = {'objectFit' : 'contain'};
-        }
-
-        return(
-            <div className="randomchar__block">
-                    <img src={thumbnail} alt="Random character" className="randomchar__img" style={imgStyle}/>
-                    
-                    <div className="randomchar__info">
-                        <p className="randomchar__name">{name}</p>
-                        <p className="randomchar__descr">
-                            {description}
-                        </p>
-                        <div className="randomchar__btns">
-                            <a href={homepage} className="button button__main">
-                                <div className="inner">homepage</div>
-                            </a>
-                            <a href={wiki} className="button button__secondary">
-                                <div className="inner">Wiki</div>
-                            </a>
-                        </div>
-                    </div>
+    return (
+        <div className="randomchar__block">
+            <img src={thumbnail} alt="Random character" className="randomchar__img" style={imgStyle}/>
+            <div className="randomchar__info">
+                <p className="randomchar__name">{name}</p>
+                <p className="randomchar__descr">
+                    {description}
+                </p>
+                <div className="randomchar__btns">
+                    <a href={homepage} className="button button__main">
+                        <div className="inner">homepage</div>
+                    </a>
+                    <a href={wiki} className="button button__secondary">
+                        <div className="inner">Wiki</div>
+                    </a>
                 </div>
-        )
-    }
+            </div>
+        </div>
+    )
+}
 
 export default RandomChar;
