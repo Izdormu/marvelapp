@@ -9,14 +9,13 @@ const useMarvelService = () => {
 
     const getAllCharacters = async (offset = _baseOffset) => {
         const res = await request(`${_apiBase}characters?limit=9&offset=${offset}&${_apiKey}`);
-        console.log(res.data.results);
         return res.data.results.map(_transformCharacter);
-    } //получаем всеъ персонажей и  проганяем  всех персонажей по нужной констуркции чтобы создать свой обьект со своим набором
+    }
 
     const getCharacter = async (id) => {
         const res = await request(`${_apiBase}characters/${id}?${_apiKey}`);
         return _transformCharacter(res.data.results[0]);
-    } //получаем одного персонажа и проганяем  по нужной констуркции чтобы создать свой обьект со своим набором свойств
+    }
 
     const _transformCharacter = (char) => {
         return {
@@ -30,7 +29,7 @@ const useMarvelService = () => {
         }
     }
 
-    return { getAllCharacters, getCharacter, loading, error }
+    return { getAllCharacters, getCharacter, loading, error, clearError }
 
 }
 export default useMarvelService;
