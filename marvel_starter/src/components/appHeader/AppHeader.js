@@ -15,11 +15,11 @@ const AppHeader = () => {
             <nav className="app__menu">
                 <ul>
                     <li>
-                        <Link to="/" className={location.pathname === '/' ? 'active-link' : ''}>Characters</Link>
+                        <Link exact to="/" className={location.pathname === '/' ? 'active-link' : ''}>Characters</Link>
                     </li>
                     /
                     <li>
-                        <Link to="/comics" className={location.pathname === '/comics' ? 'active-link' : ''}>Comics</Link>
+                        <Link to="/comics" className={location.pathname.startsWith('/comics') ? 'active-link' : ''}>Comics</Link>
                     </li>
                 </ul>
             </nav>
