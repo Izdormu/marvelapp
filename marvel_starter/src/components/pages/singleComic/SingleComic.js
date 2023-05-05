@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import useMarvelService from '../../../services/MarvelService';
 import Spinner from '../../spinner/Spinner';
 import ErrorMessage from '../../errorMessage/ErrorMessage';
+import Page404 from '../Page404/404';
 
 
 
@@ -51,6 +52,11 @@ const SingleComicPage = () => {
     const errorMessage = error ? <ErrorMessage /> : null;
     const spinner = loading ? <Spinner /> : null;
     const content = !(loading || error || !comic) ? <ComicWrapper comic={comic} /> : null;
+
+    if (error) {
+        return <Page404 />
+    }
+
 
     return (
         <>

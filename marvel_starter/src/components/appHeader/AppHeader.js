@@ -15,7 +15,7 @@ const AppHeader = () => {
             <nav className="app__menu">
                 <ul>
                     <li>
-                        <Link exact to="/" className={location.pathname === '/' ? 'active-link' : ''}>Characters</Link>
+                        <Link to="/" className={location.pathname === '/' ? 'active-link' : ''}>Characters</Link>
                     </li>
                     /
                     <li>
