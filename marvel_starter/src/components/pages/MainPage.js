@@ -1,9 +1,11 @@
 import RandomChar from "../randomChar/RandomChar";
 import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
+import SearchPanel from "../searchPanel/SearchPanel";
 import ErrorBoundary from "../errorBoundary/ErrorBoundary";
 import { useState } from "react";
 import decoration from '../../resources/img/vision.png';
+import { motion } from "framer-motion";
 
 
 const MainPage = () => {
@@ -21,9 +23,14 @@ const MainPage = () => {
         <ErrorBoundary>
           <CharList onCharSelected={onCharSelected} />
         </ErrorBoundary>
-        <ErrorBoundary>
-          <CharInfo charId={selectedChar} />
-        </ErrorBoundary>
+        <div>
+          <ErrorBoundary>
+            <CharInfo charId={selectedChar} />
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <SearchPanel />
+          </ErrorBoundary>
+        </div>
       </div>
       <img className="bg-decoration" src={decoration} alt="vision" />
     </>

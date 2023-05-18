@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelService';
-
+import { motion } from 'framer-motion';
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 
@@ -64,23 +64,29 @@ const View = ({ char }) => {
     }
 
     return (
-        <div className="randomchar__block">
-            <img src={thumbnail} alt="Random character" className="randomchar__img" style={imgStyle} />
-            <div className="randomchar__info">
-                <p className="randomchar__name">{name}</p>
-                <p className="randomchar__descr">
-                    {description}
-                </p>
-                <div className="randomchar__btns">
-                    <a href={homepage} className="button button__main">
-                        <div className="inner">homepage</div>
-                    </a>
-                    <a href={wiki} className="button button__secondary">
-                        <div className="inner">Wiki</div>
-                    </a>
+        <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1 }}
+        >
+            <div className="randomchar__block">
+                <img src={thumbnail} alt="Random character" className="randomchar__img" style={imgStyle} />
+                <div className="randomchar__info">
+                    <p className="randomchar__name">{name}</p>
+                    <p className="randomchar__descr">
+                        {description}
+                    </p>
+                    <div className="randomchar__btns">
+                        <a href={homepage} className="button button__main">
+                            <div className="inner">homepage</div>
+                        </a>
+                        <a href={wiki} className="button button__secondary">
+                            <div className="inner">Wiki</div>
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     )
 }
 

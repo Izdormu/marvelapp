@@ -4,6 +4,7 @@ import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelService';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 
 const ComicsList = () => {
@@ -42,13 +43,19 @@ const ComicsList = () => {
     const renderItems = (arr) => {
         const items = arr.map((item, i) => {
             return (
-                <li className="comics__item" key={i}>
-                    <Link to={`/comics/${item.id}`} >
-                        <img src={item.thumbnail} alt={item.title} className="comics__item-img" />
-                        <div className="comics__item-name">{item.title}</div>
-                        <div className="comics__item-price">{item.price}</div>
-                    </Link>
-                </li>
+                <motion.div
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1 }}
+                >
+                    <li className="comics__item" key={i}>
+                        <Link to={`/comics/${item.id}`} >
+                            <img src={item.thumbnail} alt={item.title} className="comics__item-img" />
+                            <div className="comics__item-name">{item.title}</div>
+                            <div className="comics__item-price">{item.price}</div>
+                        </Link>
+                    </li>
+                </motion.div>
             )
         })
         return (
