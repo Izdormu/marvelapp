@@ -53,18 +53,17 @@ const CharList = (props) => {
             if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
                 imgStyle = { 'objectFit': 'unset' };
             }
-
             return (
                 <motion.div
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 1 }}
+                    key={item.id}
                 >
                     <li
                         className="char__item"
                         tabIndex={0}
                         ref={el => itemRefs.current[i] = el}
-                        key={item.id}
                         onClick={() => {
                             props.onCharSelected(item.id);
                             focusOnItem(i);
